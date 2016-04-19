@@ -1,0 +1,8 @@
+temp.c: In function ‘main’:
+temp.c:4:2: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘scanf’
+  scanf("%d",&a);
+  ^
+temp.c:5:14: error: ‘b’ undeclared (first use in this function)
+  scanf("%d",&b);
+              ^
+temp.c:5:14: note: each undeclared identifier is reported only once for each function it appears in
