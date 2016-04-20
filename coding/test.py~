@@ -1,7 +1,7 @@
 import os
 import compile as s
 
-path = '/home/Qbuser/Desktop/project/coding/Testcases/'
+path = '/home/Qbuser/Desktop/project/coding/Questions/ques1tcases/'
 path1='/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/'
 ilist=[]
 olist=[]

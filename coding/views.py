@@ -1,4 +1,5 @@
-from . import compile as s
+from . import test as s
+import os
 from django.shortcuts import render
 
 from django.http import HttpResponse
@@ -27,10 +28,11 @@ def upload(request):
 		form = NameForm(request.POST)
 		if form.is_valid():
 			cod = form.cleaned_data["code"]
+                        os.chdir("/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/")
 			f=open('temp.c','w')
 			f.write(cod)
 			f.close()
-			t=s.compile('temp.c','inp.txt','out.txt')
+			t=s.test('temp.c','inp.txt','out.txt')
 			if(t!='err'):
 				return HttpResponse(t)
 			else:
