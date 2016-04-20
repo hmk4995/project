@@ -1,0 +1,89 @@
+
+
+Wed Apr 20 12:21:42 2016
+Command line: TestDisk
+
+TestDisk 6.14, Data Recovery Utility, July 2013
+Christophe GRENIER <grenier@cgsecurity.org>
+http://www.cgsecurity.org
+OS: Linux, kernel 4.2.0-35-generic (#40~14.04.1-Ubuntu SMP Fri Mar 18 16:37:35 UTC 2016) x86_64
+Compiler: GCC 4.8
+Compilation date: 2013-10-29T01:29:29
+ext2fs lib: 1.42.9, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none
+/dev/sda: LBA, HPA, LBA48, DCO support
+/dev/sda: size       976773168 sectors
+/dev/sda: user_max   976773168 sectors
+/dev/sda: native_max 976773168 sectors
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 1 sectors, sector size=512
+Hard disk list
+Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63, sector size=512 - ST500DM002-1BD142, S/N:S2ASHWSF, FW:KC48
+Disk /dev/sdb - 8103 MB / 7728 MiB - CHS 1021 250 62, sector size=512 - JetFlash Transcend 8GB, FW:1100
+
+Partition table type (auto): Intel
+Disk /dev/sdb - 8103 MB / 7728 MiB - JetFlash Transcend 8GB
+Partition table type: Intel
+
+Analyse Disk /dev/sdb - 8103 MB / 7728 MiB - CHS 1021 250 62
+Geometry from i386 MBR: head=255 sector=63
+BAD_RS LBA=2048 2016
+NTFS at 0/33/3
+Current partition structure:
+ 1 * HPFS - NTFS              0  33  3  1021  23 18   15824896
+
+Warning: Bad ending sector (CHS and LBA don't match)
+
+search_part()
+Disk /dev/sdb - 8103 MB / 7728 MiB - CHS 1021 250 62
+NTFS at 0/33/3
+filesystem size           15824896
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               989055
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS              0  33  3  1021  23 18   15824896
+     NTFS, blocksize=4096, 8102 MB / 7727 MiB
+Warning: the current number of heads per cylinder is 250 but the correct value may be 255.
+
+Results
+   * HPFS - NTFS              0  33  3  1021  23 18   15824896
+     NTFS, blocksize=4096, 8102 MB / 7727 MiB
+
+interface_write()
+ 1 * HPFS - NTFS              0  33  3  1021  23 18   15824896
+
+search_part()
+Disk /dev/sdb - 8103 MB / 7728 MiB - CHS 1021 250 62
+NTFS at 0/33/3
+filesystem size           15824896
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               989055
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS              0  33  3  1021  23 18   15824896
+     NTFS, blocksize=4096, 8102 MB / 7727 MiB
+NTFS at 1021/23/18
+filesystem size           15824896
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               989055
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS              0  33  3  1021  23 18   15824896
+     NTFS found using backup sector, blocksize=4096, 8102 MB / 7727 MiB
+Warning: the current number of heads per cylinder is 250 but the correct value may be 255.
+
+Results
+   * HPFS - NTFS              0  33  3  1021  23 18   15824896
+     NTFS, blocksize=4096, 8102 MB / 7727 MiB
+
+interface_write()
+ 1 * HPFS - NTFS              0  33  3  1021  23 18   15824896
+simulate write!
+
+write_mbr_i386: starting...
+write_all_log_i386: starting...
+No extended partition
+
+TestDisk exited normally.

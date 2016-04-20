@@ -18,24 +18,22 @@ def compare(out,out1):
 		return success
 
 def compile(name,inp,out):
-		f=open(inp,"r")
-		f1=open("tout.txt","w")
-		f2=open("terr.txt","w")
-		subprocess.call(["gcc", name,"-o","t"],stderr=f2)
-		f2.close()
-		f2=open("terr.txt")
-		errors=f2.read()
-		f2.close()
+		inputfile=open(inp,"r")
+		tempoutfile=open("tout.txt","w")
+		temperrfile=open("terr.txt","w")
+		subprocess.call(["gcc", name,"-o","t"],stderr=temperrfile)
+		temperrfile.close()
+		temperrfile=open("terr.txt")
+		errors=temperrfile.read()
+		temperrfile.close()
 		if errors=='':
-			f2.close()
-			subprocess.call(["./t"],stdin=f,stdout=f1)
-			f.close()
-			f1.close()
+			subprocess.call(["./t"],stdin=inputfile,stdout=tempoutfile)
+			inputfile.close()
+			tempoutfile.close()
 			output=compare("tout.txt",out)
 			if(output):
 				return("Success")
 			else:
 				return("Failure")
 		else:
-			f2.close()
 			return ("err")
