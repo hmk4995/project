@@ -1,20 +1,20 @@
 import subprocess
 def compare(out,out1):
 		success=True
-		r=open(out)
-		r1=open(out1)
-		r_line=r.readline()
-		r1_line=r1.readline()
-		while r_line!='' or r1_line!='':
-			 r_line=r_line.strip()
-			 r1_line=r1_line.strip()
-			 if(r_line!=r1_line):
+		read=open(out)
+		read1=open(out1)
+		read_line=read.readline()
+		read1_line=read1.readline()
+		while read_line!='' or read1_line!='':
+			 read_line=read_line.strip()
+			 read1_line=read1_line.strip()
+			 if(read_line!=read1_line):
 					 success=False
 					 break
-			 r_line=r.readline()
-			 r1_line=r1.readline()
-		r.close()
-		r1.close()
+			 read_line=read.readline()
+			 read1_line=read1.readline()
+		read.close()
+		read1.close()
 		return success
 
 def compile(name,inp,out):
@@ -24,15 +24,15 @@ def compile(name,inp,out):
 		subprocess.call(["gcc", name,"-o","t"],stderr=f2)
 		f2.close()
 		f2=open("terr.txt")
-		p=f2.read()
+		errors=f2.read()
 		f2.close()
-		if p=='':
+		if errors=='':
 			f2.close()
 			subprocess.call(["./t"],stdin=f,stdout=f1)
 			f.close()
 			f1.close()
-			t=compare("tout.txt",out)
-			if(t):
+			output=compare("tout.txt",out)
+			if(output):
 				return("Success")
 			else:
 				return("Failure")
