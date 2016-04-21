@@ -28,7 +28,7 @@ def upload(request):
 		form = NameForm(request.POST)
 		if form.is_valid():
 			cod = form.cleaned_data["code"]
-                        os.chdir("/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/")
+			os.chdir("/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/")
 			f=open('temp.c','w')
 			f.write(cod)
 			f.close()

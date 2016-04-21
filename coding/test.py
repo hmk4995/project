@@ -1,5 +1,5 @@
 import os
-import compile as s
+from . import compile as s
 
 def test(path1):
     path = '/home/Qbuser/Desktop/project/coding/Questions/ques1tcases/'
