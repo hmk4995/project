@@ -10,8 +10,8 @@ class Question(models.Model):
 	sample = models.TextField(max_length=200, default="", editable=True)
 	score = models.IntegerField(default=0)
 
-	def __int__(self):
-		return self.question_id
+	def __str__(self):
+		return self.question_name
 
 class Contest(models.Model):
 	contest_name = models.CharField(max_length=200, default="", editable=True, unique=True)
@@ -36,9 +36,9 @@ class User(models.Model):
 
 #class Test_case(models.Model):
 #	question = models.ForeignKey(Question, on_delete=models.CASCADE)
-#	sl_no = models.IntegerField(default=1, unique=False)
-#	inputs = models.CommaSeparatedIntegerField(max_length=200, default="", editable=False)
-#	outputs = models.CommaSeparatedIntegerField(max_length=200, default="", editable=False)
+#	sl_no = models.IntegerField(default=1, unique=True)
+#	inputs = models.CommaSeparatedIntegerField(max_length=200, default="", editable=True)
+#	outputs = models.CommaSeparatedIntegerField(max_length=200, default="", editable=True)
 
 #	def __int__(self):
 #		return self.sl_no 
@@ -55,11 +55,11 @@ class Candidate(models.Model):
 
 class Submission(models.Model):
 	candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+	question = models.ForeignKey(Question,default="", on_delete=models.CASCADE)
 	language = models.CharField(max_length=200, default="", editable=True)
 	time = models.IntegerField(default=0)
 	score = models.IntegerField(default=0)
 
 	def __int__(self):
 		return self.score
-
 

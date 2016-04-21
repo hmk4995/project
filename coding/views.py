@@ -32,7 +32,7 @@ def upload(request):
 			f=open('temp.c','w')
 			f.write(cod)
 			f.close()
-			t=s.test('temp.c','inp.txt','out.txt')
+			t=s.test('/home/Qbuser/Desktop/project/coding/Questions/ques1tcases/')
 			if(t!='err'):
 				return HttpResponse(t)
 			else:
