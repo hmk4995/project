@@ -17,7 +17,9 @@ def test(path1):
     os.chdir(path1)
     cnt=0
     for inp,out in zip(ilist,olist):
-       if(s.compile('temp.c',inp,out)=='Success'):
+        if (s.compile('temp.c',inp,out)=='err'):
+            return 'err'
+        elif(s.compile('temp.c',inp,out)=='Success'):
            cnt+=1
     return((cnt/len(ilist))*100)
     
