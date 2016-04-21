@@ -5,9 +5,24 @@ from django.contrib import admin
 
 from .models import Question, Contest, User, Candidate, Submission
 
-admin.site.register(Question)
-admin.site.register(Contest)
-admin.site.register(User)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('question_id','question_name')
+
+class ContestAdmin(admin.ModelAdmin):
+    list_display = ('contest_name','questions')
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('user_name','admin_privilege')
+
+class CandidateAdmin(admin.ModelAdmin):
+    list_display = ('user_id','first_name')
+
+class SubmissionAdmin(admin.ModelAdmin):
+    list_display = ('language','time','score')
+
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Contest, ContestAdmin)
+admin.site.register(User, UserAdmin)
 #admin.site.register(Test_case)
-admin.site.register(Candidate)
-admin.site.register(Submission)
+admin.site.register(Candidate, CandidateAdmin)
+admin.site.register(Submission, SubmissionAdmin)

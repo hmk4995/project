@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Question(models.Model):
-	question_id= models.IntegerField(default=0)
+	question_id= models.AutoField(primary_key=True)
 	question_name = models.CharField(max_length=200, default="", editable=True, unique=True)
 	description = models.TextField(max_length=200, default="", editable=True)
 	input_format = models.CharField(max_length=200, default="", editable=True)
@@ -46,7 +46,7 @@ class User(models.Model):
 
 class Candidate(models.Model):
 	contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-	user_id = models.IntegerField(default=1, unique=True)
+	user_id = models.AutoField(primary_key=True)
 	password = models.CharField(max_length=200, default="", editable=True)
 	first_name = models.CharField(max_length=200, default="", editable=True)
 	last_name = models.CharField(max_length=200, default="", editable=True)
