@@ -8,6 +8,7 @@ class Question(models.Model):
 	input_format = models.CharField(max_length=200, default="", editable=True)
 	output_format = models.CharField(max_length=200, default="", editable=True)
 	sample = models.TextField(max_length=200, default="", editable=True)
+	no_of_test_cases = models.IntegerField(default=0)
 	score = models.IntegerField(default=0)
 
 	def __str__(self):
