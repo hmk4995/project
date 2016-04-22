@@ -6,11 +6,18 @@ from django.contrib import admin
 from .models import Question, Contest, User, Candidate, Submission
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('question_id','question_name')
+    list_display = ['question_id','question_name']
+    search_fields = ['question_id','question_name']
+    list_display_links = ['question_id','question_name']
+    class Meta:
+    	model = Question
+    	ordering = ['question_id']
 
 class ContestAdmin(admin.ModelAdmin):
-    list_display = ('contest_name','questions')
-
+    list_display = ['contest_name']
+    search_fields = ['contest_name']
+    #add date field
+    
 class UserAdmin(admin.ModelAdmin):
     list_display = ('user_name','admin_privilege')
 
