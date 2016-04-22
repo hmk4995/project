@@ -37,8 +37,8 @@ def upload(request):
 				return HttpResponse(t)
 			else:
 				f1=open("terr.txt")
-				p=f1.read().replace('\n', '<br>')
-				return HttpResponse(p)
+				p=f1.read()#.replace('\n', '<br>')
+				return HttpResponse("ERRORS\n"+p)
 		
 		else:
 			return HttpResponseRedirect('coding/input.html')

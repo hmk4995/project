@@ -2,7 +2,7 @@
 {% load staticfiles %}
 <html>
   <head>
-	<title>Qburst</title>
+	<title>Project</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<Bootstrap >
 	<link href="{%static "bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
@@ -14,6 +14,9 @@
 	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 	  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 	<![endif]-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+
   </head>
   <body>
 	<div class="header">
@@ -37,42 +40,44 @@
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
 				   <div class="col-md-15">
-					<p style="font-family:verdana;"><b>Input 2 numbers and find their sum</b><br>Input format:2 integers<br>Output format:integer<br>Sample Input:12<br>3<br>Sample Output:15</p>
+					<p style="font-family:verdana;"><b>Input 2 numbers and find their sum</b><br>Input formats :2 integers<br>Output format:integer<br>Sample Input :12<br>3<br>Sample Output :15</p>
 						
 
 							   
 						<div class="content-box-large">
 						
 							<div class="panel-body">
-								<form class="form-horizontal" role="form" action= "{% url 'upload' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-									{{ form.as_p }}
-								  <div class="form-group">
+								<form class="form-horizontal" role="form"  action="{% url 'upload' %}" id="error"  method="POST"  enctype="multipart/form-data">{% csrf_token %}
+									
+								  <div class="form-group"> 
 									<label for="inputquestion" class="col-sm-12 control-label">Code</label>
 									<div class="col-sm-15">
-									  <textarea class="form-control" name="code"  rows="10" cols="10" placeholder="Enter the code..." ></textarea>
+									  <textarea class="form-control" name="code"  id="ans" rows="10" cols="60" placeholder="Enter the code..." ></textarea>
 									</div>
 								  </div>
 								 
 								  <div class="form-group">
-									<div class="col-sm-offset-11 col-sm-50">
-									  <button type="submit" class="btn btn-primary"> Run </button>
+									<div  class="col-sm-offset-11 col-sm-50">
+									  <button type="submit" value="submit" class="btn btn-primary"> Run </button>
 									</div>
 								  </div>
 								 
 								  </div>
 								</form>
 								<div class="col-sm-offset-11 col-sm-50">
-									  <button type="submit" class="btn btn-primary">submit</button>
+									  <button type="button"   value="submit" id="submit" class="btn btn-primary">submit</button>
 									</div>
 							</div>
 							
 									
 						</div>
-                           <h4>Errors<h4>
-                        <div class="col-sm-15">
-									  <textarea class="form-control" name="code" rows="10" cols="10"  ></textarea>
-									</div>
-					</div> 
+						<div><h3>RESULT</h3></div>
+                          <div class="col-sm-15">
+									  <textarea class="form-control" name="errormsg"  id="errmsg" rows="10" cols="60" placeholder="Errors......" ></textarea>
+							</div>
+                           
+                        
+					 
 					
 				   
 				</ul>
@@ -81,12 +86,48 @@
 		  
 		</div>
 	</div>
+  <script type="text/javascript">
 
-	
+   $(document).ready(function(event) {
+        //$("#error").ajaxForm(function(){
+       	// event.preventDefault();
+           
+       	 var code = $("#ans").val();
+       	 
+            // $.ajax({
+            //      type:"POST",
+            //      url:"/upload/",
+            //       data: {
+            //       	code : $("#ans").val(),
+       	 
+            //       	'csrfmiddlewaretoken': '{{csrf_token}}'
+            //       }
+                  
+            // });
+
+        var options = { 
+            // target element(s) to be updated with server response 
+	        beforeSubmit:  showRequest,  // pre-submit callback 
+	        success:       showResponse  // post-submit callback 
+            
+        }; 
+ 
+	    // bind form using 'ajaxForm' 
+	    $('#error').ajaxForm(options); 
+	   
+    });
+function showRequest(formData, jqForm, options) { 
+	alert('About to submit: \n\n' ); 
+	    return true; 
+} 
+
+function showResponse(responseText) { 
+	alert('About to submit: \n\n');
+	$("#errmsg").html(responseText);//append("<p>"+responseText+"</p>");
+	    return true; 
+} 
+</script>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="https://code.jquery.com/jquery.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
-	<script src="{% static "js/custom.js" %}"></script>
+	
   </body>
 </html>
