@@ -42,7 +42,7 @@ def qstn_test_output_path(self,filename):
 
 class Test_case(models.Model):
 	qno = models.ForeignKey(Question, on_delete=models.CASCADE)
-	sl_no = models.IntegerField(default=1, unique=True)
+	sl_no = models.IntegerField(default=1, unique=False)
 	inputs = models.FileField(upload_to=qstn_test_input_path,blank=False,null=False)
 	outputs = models.FileField(upload_to=qstn_test_output_path,blank=False,null=False)
 
