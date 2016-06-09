@@ -40,8 +40,9 @@
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
 				   <div class="col-md-15">
-					<p style="font-family:verdana;"><b>Input 2 numbers and find their sum</b><br>Input formats :2 integers<br>Output format:integer<br>Sample Input :12<br>3<br>Sample Output :15</p>
-						
+				   
+ 				     <h4>{{question_name.first.question_name}}</h4>
+					<p style="font-family:verdana,font-size:160%;">{{question_name.first.description}}<br><br>Input Format:{{question_name.first.input_format}}<br>Output Format:{{question_name.first.output_format}}<br>{{question_name.first.sample}}</p>
 
 							   
 						<div class="content-box-large">
@@ -58,6 +59,7 @@
 								 
 								  <div class="form-group">
 									<div  class="col-sm-offset-11 col-sm-50">
+									  <input type="hidden" name="idno" value="{{ question_name.first.question_id }}">
 									  <button type="submit" value="submit" class="btn btn-primary"> Run </button>
 									</div>
 								  </div>
@@ -66,7 +68,11 @@
 								</form>
 								<div class="col-sm-offset-11 col-sm-50">
 									  <button type="button"   value="submit" id="submit" class="btn btn-primary">submit</button>
-									</div>
+									  
+
+                                </div>
+
+									
 							</div>
 							
 									
@@ -75,7 +81,10 @@
                           <div class="col-sm-15">
 									  <textarea class="form-control" name="errormsg"  id="errmsg" rows="10" cols="60" placeholder="Errors......" ></textarea>
 							</div>
-                           
+                          {#<div class="col-sm-offset-11 col-sm-50">#}
+                            {#    <li><a href="/list/" type="button"  class="btn btn-primary">BACK</a></li>#}
+                              {#  </div>#}
+  
                         
 					 
 					
@@ -89,30 +98,30 @@
   <script type="text/javascript">
 
    $(document).ready(function(event) {
-        //$("#error").ajaxForm(function(){
-       	// event.preventDefault();
+        //$("#error").ajaxForm(function(){ #}
+       	 //{#event.preventDefault();#}
            
        	 var code = $("#ans").val();
        	 
-            // $.ajax({
-            //      type:"POST",
-            //      url:"/upload/",
-            //       data: {
-            //       	code : $("#ans").val(),
+          //{#   $.ajax({  #}
+           //{#       type:"POST",#}
+           //{#       url:"/upload/",#}
+            //{#       data: {  #}
+            //{#       	code : $("#ans").val(),#}
        	 
-            //       	'csrfmiddlewaretoken': '{{csrf_token}}'
-            //       }
+              //{#    	'csrfmiddlewaretoken': '{{csrf_token}}' #}
+            //{#       }  #}
                   
-            // });
+            //{# });  #}
 
         var options = { 
-            // target element(s) to be updated with server response 
+            
 	        beforeSubmit:  showRequest,  // pre-submit callback 
 	        success:       showResponse  // post-submit callback 
             
         }; 
  
-	    // bind form using 'ajaxForm' 
+	     
 	    $('#error').ajaxForm(options); 
 	   
     });
@@ -123,11 +132,10 @@ function showRequest(formData, jqForm, options) {
 
 function showResponse(responseText) { 
 	alert('About to submit: \n\n');
-	$("#errmsg").html(responseText);//append("<p>"+responseText+"</p>");
+	$("#errmsg").html(responseText);
 	    return true; 
 } 
 </script>
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	
   </body>
 </html>
