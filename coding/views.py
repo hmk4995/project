@@ -28,16 +28,19 @@ def upload(request):
 		form = NameForm(request.POST)
 		if form.is_valid():
 			cod = form.cleaned_data["code"]
+			cwd=os.getcwd()
 			os.chdir("/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/")
 			f=open('temp.c','w')
 			f.write(cod)
 			f.close()
-			t=s.test('/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/')
+			t=s.test('/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/',1)
 			if(t!='err'):
+				os.chdir(cwd)
 				return HttpResponse(t)
 			else:
 				f1=open("terr.txt")
 				p=f1.read()#.replace('\n', '<br>')
+				os.chdir(cwd)
 				return HttpResponse("ERRORS\n"+p)
 		
 		else:

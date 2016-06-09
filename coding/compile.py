@@ -1,4 +1,26 @@
 import subprocess
+def compil(name,inp,out):
+	inputfile=open(inp,'r') 
+	tempoutfile=open("tout.txt","w")
+	temperrfile=open("terr.txt","w")
+	subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile)
+	temperrfile.close()
+	temperrfile=open("terr.txt")
+	errors=temperrfile.read()
+	temperrfile.close()
+	n="./"+name[:2]
+	if errors=='':
+		subprocess.call([n],stdin=inputfile,stdout=tempoutfile)
+		inputfile.close()
+		tempoutfile.close()
+		output=compare("tout.txt",out)
+		if(output):
+			return("Success")
+		else:
+			return("Failure")
+	else:
+		return ("err")
+
 def compare(out,out1):
 		success=True
 		read=open(out)
@@ -16,24 +38,3 @@ def compare(out,out1):
 		read.close()
 		read1.close()
 		return success
-
-def compile(name,inp,out):
-		inputfile=open(inp,"r")
-		tempoutfile=open("tout.txt","w")
-		temperrfile=open("terr.txt","w")
-		subprocess.call(["gcc", name,"-o","t"],stderr=temperrfile)
-		temperrfile.close()
-		temperrfile=open("terr.txt")
-		errors=temperrfile.read()
-		temperrfile.close()
-		if errors=='':
-			subprocess.call(["./t"],stdin=inputfile,stdout=tempoutfile)
-			inputfile.close()
-			tempoutfile.close()
-			output=compare("tout.txt",out)
-			if(output):
-				return("Success")
-			else:
-				return("Failure")
-		else:
-			return ("err")

@@ -1,25 +1,20 @@
 import os
 from . import compile as s
+from .models import Test_case
 
-def test(path1):
-    path = '/home/Qbuser/Desktop/project/coding/Questions/ques1tcases/'
-    ilist=[]
-    olist=[]
-    for dirpath,dirnames,files in os.walk(path):
-        for file in files:
-            if file.endswith(".txt") and file.startswith("testinp"):
-                ilist.append(os.path.join(path,file))
-                ilist.sort()
-            elif file.endswith(".txt") and file.startswith("testout"):
-                olist.append(os.path.join(path,file))
-                olist.sort()
-
-    os.chdir(path1)
-    cnt=0
-    for inp,out in zip(ilist,olist):
-        if (s.compile('temp.c',inp,out)=='err'):
-            return 'err'
-        elif(s.compile('temp.c',inp,out)=='Success'):
-           cnt+=1
-    return((cnt/len(ilist))*100)
-    
+def test(path1,no):
+	path = '/home/Qbuser/Desktop/project/'
+	setq =Test_case.objects.filter(qno_id=no)
+	cont=Test_case.objects.filter(qno_id=no).count()
+	os.chdir(path1)
+	cnt=0
+	
+	for e in setq:
+		
+	# for inp,out in zip(ilist,olist):
+		compiledResult = s.compil('temp.c',os.path.join(path,e.inputs.name),os.path.join(path,e.outputs.name))
+		if (compiledResult =='err'):
+			return 'err'
+		elif(compiledResult =='Success'):
+		   cnt+=1
+	return((cnt/cont)*100)
