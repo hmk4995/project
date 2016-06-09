@@ -11,9 +11,8 @@ class Question(models.Model):
     no_of_test_cases = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.question_name
-      
+	def __str__(self):
+		return str(self.question_id)
 
 class Contest(models.Model):
     contest_name = models.CharField(max_length=200, default="", editable=True, unique=True)
@@ -35,15 +34,20 @@ class User(models.Model):
     def __str__(self):
         return self.user_name
 
+def qstn_test_input_path(self,filename):
+	return 'coding/Questions/qstn{0}/inp{1}.txt'.format(self.qno.question_id,self.sl_no)
 
-#class Test_case(models.Model):
-#   question = models.ForeignKey(Question, on_delete=models.CASCADE)
-#   sl_no = models.IntegerField(default=1, unique=True)
-#   inputs = models.CommaSeparatedIntegerField(max_length=200, default="", editable=True)
-#   outputs = models.CommaSeparatedIntegerField(max_length=200, default="", editable=True)
+def qstn_test_output_path(self,filename):
+	return 'coding/Questions/qstn{0}/out{1}.txt'.format(self.qno.question_id,self.sl_no)
 
-#   def __int__(self):
-#       return self.sl_no 
+class Test_case(models.Model):
+	qno = models.ForeignKey(Question, on_delete=models.CASCADE)
+	sl_no = models.IntegerField(default=1, unique=True)
+	inputs = models.FileField(upload_to=qstn_test_input_path,blank=False,null=False)
+	outputs = models.FileField(upload_to=qstn_test_output_path,blank=False,null=False)
+
+	def __int__(self):
+		return self.sl_no 
 
 class Candidate(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
