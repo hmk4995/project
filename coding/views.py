@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from coding.models import Question
+from coding.models import Question,Contest
 from .forms import NameForm
 
 
@@ -15,7 +15,10 @@ def login(request):
     return render_to_response('coding/login')
 
 def list(request):
-    info = Question.objects.all()
+    cntstname='NSS_CONTEST'
+    setw = Contest.objects.get(contest_name__exact=cntstname)
+    qu = setw.questions.split(',')
+    info = Question.objects.filter(question_id__in=qu)
     detail = {'data':info}
     return render_to_response('coding/list',detail,context_instance=RequestContext(request))
 
@@ -32,13 +35,19 @@ def upload(request):
         if form.is_valid():
             cod = form.cleaned_data["code"]
             idnum = request.POST.get('idno')
+            lang='c'
+            cntst='nss3'
+            userid='nssuser1'
             cwd=os.getcwd()
-            os.chdir("/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/")
-            f=open('temp.c','w')
+            path='/home/Qbuser/Desktop/project/coding/contest/{0}/{1}/'.format(cntst,userid)
+            os.makedirs(path, exist_ok=True)
+            os.chdir(path)
+            name='temp{0}.{1}'.format(idnum,lang)
+            f=open(name,'w')
             f.write(cod)
             f.close()
             os.chdir(cwd)
-            t=s.test('/home/Qbuser/Desktop/project/coding/contest/nss/nssuser1/ques1/',idnum)
+            t=s.test(path,name,idnum)
             if(t!='err'):
                 os.chdir(cwd)
                 return HttpResponse(t)
@@ -55,4 +64,3 @@ def upload(request):
     else:
         
         return HttpResponse('/thankyou/')
-        
