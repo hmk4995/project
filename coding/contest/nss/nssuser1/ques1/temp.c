@@ -1,5 +1,6 @@
-<<<<<<< HEAD
-ssssssssssss
-=======
-dfasdf
->>>>>>> 413f03231e4f400085bb45ff529b041690591448
+#include<stdio.h>
+void main()
+{ int a,b;
+  scanf("%d %d",&a,&b);
+  printf("%d",a+b);
+}
