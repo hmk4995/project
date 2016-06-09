@@ -26,14 +26,6 @@ class Contest(models.Model):
 		return self.contest_name 
 
 
-class User(models.Model):
-	user_name = models.CharField(max_length=200, default="", editable=True, unique=True)
-	password = models.CharField(max_length=200, default="", editable=True)
-	admin_privilege = models.CharField(max_length=200, default="", editable=True)
-	
-	def __str__(self):
-		return self.user_name
-
 def qstn_test_input_path(self,filename):
 	return 'coding/Questions/qstn{0}/inp{1}.txt'.format(self.qno.question_id,self.sl_no)
 
@@ -56,8 +48,8 @@ class Candidate(models.Model):
 	first_name = models.CharField(max_length=200, default="", editable=True)
 	last_name = models.CharField(max_length=200, default="", editable=True)
 
-	def __int__(self):
-		return self.user_id
+	def __str__(self):
+		return str(self.user_id)
 
 class Submission(models.Model):
 	candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)

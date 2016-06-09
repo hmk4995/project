@@ -1,0 +1,8 @@
+temp.c: In function ‘main’:
+temp.c:4:7: error: expected identifier or ‘(’ before ‘;’ token
+ int a,;
+       ^
+temp.c:5:19: error: ‘b’ undeclared (first use in this function)
+ scanf("%d %d",&a,&b);
+                   ^
+temp.c:5:19: note: each undeclared identifier is reported only once for each function it appears in
