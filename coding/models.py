@@ -43,7 +43,7 @@ class Test_case(models.Model):
 
 class Candidate(models.Model):
 	contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-	user_name = models.CharField(max_length=200, default="", editable=True)
+	user_name = models.CharField(primary_key=True,unique=True,max_length=200, default="", editable=True)
 	password = models.CharField(max_length=200, default="password", editable=False)
 	first_name = models.CharField(max_length=200, default="",blank=True, editable=True)
 	last_name = models.CharField(max_length=200, default="",blank=True, editable=True)
