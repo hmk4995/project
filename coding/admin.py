@@ -19,7 +19,7 @@ class ContestAdmin(admin.ModelAdmin):
     #add date field
  
 class CandidateAdmin(admin.ModelAdmin):
-    list_display = ('user_id','first_name')
+    list_display = ('user_id','user_name','first_name')
 
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('language','time','score')
