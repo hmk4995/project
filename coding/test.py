@@ -8,9 +8,7 @@ def test(path1,name,no):
 	cont=Test_case.objects.filter(qno_id=no).count()
 	os.chdir(path1)
 	cnt=0
-	
 	for e in setq:
-		
 		compiledResult = s.compil(name,os.path.join(path,e.inputs.name),os.path.join(path,e.outputs.name))
 		if (compiledResult =='err'):
 			return 'err'

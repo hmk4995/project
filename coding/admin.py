@@ -3,7 +3,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Question, Contest, User, Candidate, Submission,Test_case
+from .models import Question, Contest, Candidate, Submission,Test_case
 
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ['question_id','question_name']
@@ -17,10 +17,7 @@ class ContestAdmin(admin.ModelAdmin):
     list_display = ['contest_name']
     search_fields = ['contest_name']
     #add date field
-    
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('user_name','admin_privilege')
-
+ 
 class CandidateAdmin(admin.ModelAdmin):
     list_display = ('user_id','first_name')
 
@@ -33,7 +30,6 @@ class Test_caseAdmin(admin.ModelAdmin):
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Contest, ContestAdmin)
-admin.site.register(User, UserAdmin)
 admin.site.register(Test_case,Test_caseAdmin)
 admin.site.register(Candidate, CandidateAdmin)
 admin.site.register(Submission, SubmissionAdmin)
