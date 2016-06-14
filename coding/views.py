@@ -11,6 +11,7 @@ from coding.models import Question, Candidate, Contest
 from .forms import NameForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.core.urlresolvers import reverse
 
 
 
@@ -27,7 +28,7 @@ def list(request):
             if user.is_active:
                 if user.is_superuser or user.is_staff:
                     login(request, user)
-                    return HttpResponseRedirect('/admin')
+                    return HttpResponseRedirect(reverse('admin:index'))
             else:
                 cand = Candidate.objects.get(user_name__exact=uname)
                 if (cand):
