@@ -10,7 +10,8 @@ from django.core.urlresolvers import reverse
 from coding.models import Question, Candidate, Contest
 from .forms import NameForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
+
 
 
 def login(request):
@@ -21,24 +22,22 @@ def list(request):
     if request.method == 'POST':
         uname = request.POST.get('name')
         passwrd = request.POST.get('pword')
-    user = authenticate(username = uname, password = passwrd)
-    cand = Candidate.objects.filter(user_name__exact=uname)
-    print (cand)
-    for d in cand:
-        contstnam = d.contest
-    if user is not None:
-        return HttpResponseRedirect('/admin') 
-   
-    elif (cand):
-           
-        setw = Contest.objects.get(contest_name__exact=contstnam)
-        qu = setw.questions.split(',')
-        info = Question.objects.filter(question_id__in=qu)
-        detail = {'data':info}
-        return render_to_response('coding/list',detail,context_instance=RequestContext(request))
-   
-    else:
-        return render_to_response('coding/login', context=RequestContext(request))    
+        user = authenticate(username = uname, password = passwrd)
+        if user is not None:
+            if user.is_active:
+                if user.is_superuser or user.is_staff:
+                    login(request, user)
+                    return HttpResponseRedirect('/admin')
+            else:
+                cand = Candidate.objects.get(user_name__exact=uname)
+                if (cand):
+                    setw = Contest.objects.get(contest_name__exact=cand.contest)
+                    qu = setw.questions.split(',')
+                    info = Question.objects.filter(question_id__in=qu)
+                    detail = {'data':info}
+                    return render_to_response('coding/list',detail,context_instance=RequestContext(request))
+                else:
+                    return render_to_response('coding/login', context=RequestContext(request))    
 
 def input(request):
      

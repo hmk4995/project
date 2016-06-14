@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 
 
 urlpatterns = [
+##    url(r'^admin$', RedirectView.as_view(pattern_name='login', permanent=True, query_string=True))
     url(r'^/$', lambda _: redirect('admin:index')),
     url(r'^$', views.login, name='login'),
     url(r'^list/$', views.list, name='list'),
