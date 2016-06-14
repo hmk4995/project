@@ -29,15 +29,15 @@ def list(request):
                 if user.is_superuser or user.is_staff:
                     login(request, user)
                     return HttpResponseRedirect(reverse('admin:index'))
-            else:
-                cand = Candidate.objects.get(user_name__exact=uname)
-                if (cand):
+        else:
+             cand = Candidate.objects.get(user_name__exact=uname)
+             if (cand):
                     setw = Contest.objects.get(contest_name__exact=cand.contest)
                     qu = setw.questions.split(',')
                     info = Question.objects.filter(question_id__in=qu)
                     detail = {'data':info}
                     return render_to_response('coding/list',detail,context_instance=RequestContext(request))
-                else:
+             else:
                     return render_to_response('coding/login', context=RequestContext(request))    
 
 def input(request):
