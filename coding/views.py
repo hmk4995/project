@@ -3,18 +3,21 @@ import os
 from django.shortcuts import render
 
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from coding.models import Question, Candidate, Contest
 from .forms import NameForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 
 
-
+def logout_view(request):
+    logout(request)
+    return render_to_response('coding/login', context=RequestContext(request))
+    
 def login(request):
     return render_to_response('coding/login', context=RequestContext(request))
 
@@ -41,10 +44,14 @@ def list(request):
                     return render_to_response('coding/login', context=RequestContext(request))    
 
 def input(request):
-     
+    if not request.user.is_authenticated():
+        cand = Candidate.objects.get(user_name__exact=request.user)
+        if (cand):
             question_info = Question.objects.filter(question_id__exact=request.GET.get('qid'))
             question_detail = {'question_name': question_info}
             return render_to_response('coding/input', question_detail,context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('coding/login')
 
 def upload(request):
 
