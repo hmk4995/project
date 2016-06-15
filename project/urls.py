@@ -25,7 +25,8 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'website.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^admin/login/', views.login),
+    url(r'^admin/login/', views.login1),
+    url(r'^admin/logout/$',views.logout_view),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('coding.urls')),
     
