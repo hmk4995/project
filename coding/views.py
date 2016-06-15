@@ -12,16 +12,17 @@ from .forms import NameForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def logout_view(request):
     logout(request)
-    return render_to_response('coding/login', context=RequestContext(request))
+    return redirect('login1')
     
-def login(request):
-    return render_to_response('coding/login', context=RequestContext(request))
+def login1(request):
+    return render_to_response('coding/login1', context=RequestContext(request))
 
-def list(request):
+def loginauth(request):
 
     if request.method == 'POST':
         uname = request.POST.get('name')
@@ -33,25 +34,33 @@ def list(request):
                     login(request, user)
                     return HttpResponseRedirect(reverse('admin:index'))
         else:
-             cand = Candidate.objects.get(user_name__exact=uname)
-             if (cand):
-                    setw = Contest.objects.get(contest_name__exact=cand.contest)
-                    qu = setw.questions.split(',')
-                    info = Question.objects.filter(question_id__in=qu)
-                    detail = {'data':info}
-                    return render_to_response('coding/list',detail,context_instance=RequestContext(request))
-             else:
-                    return render_to_response('coding/login', context=RequestContext(request))    
+            try:
+                cand = Candidate.objects.get(user_name__exact=uname)
+            except ObjectDoesNotExist:
+                return redirect('login1')
+            return listdis(request,cand)
+    else:
+        return redirect('login1')
+
+def listdis(request,cand=None):
+    if cand is not None:
+        setw = Contest.objects.get(contest_name__exact=cand.contest)
+    else:
+        return redirect('login1')
+    qu = setw.questions.split(',')
+    info = Question.objects.filter(question_id__in=qu)
+    detail = {'data':info}
+    return render_to_response('coding/listdis',detail,context_instance=RequestContext(request))
+           
 
 def input(request):
-    if not request.user.is_authenticated():
-        cand = Candidate.objects.get(user_name__exact=request.user)
-        if (cand):
-            question_info = Question.objects.filter(question_id__exact=request.GET.get('qid'))
-            question_detail = {'question_name': question_info}
-            return render_to_response('coding/input', question_detail,context_instance=RequestContext(request))
-        else:
-            return HttpResponseRedirect('coding/login')
+    try:
+        question_info = Question.objects.filter(question_id__exact=request.GET.get('qid'))
+    except ObjectDoesNotExist:
+        return redirect('login1')
+    question_detail = {'questin_name': question_info}
+    return render_to_response('coding/input', question_detail,context_instance=RequestContext(request))
+    
 
 def upload(request):
 
@@ -88,4 +97,4 @@ def upload(request):
 
     else:
         
-        return HttpResponse('/thankyou/')
+        return redirect('login1')
