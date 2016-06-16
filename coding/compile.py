@@ -1,16 +1,44 @@
 import subprocess
-def compil(name,inp,out):
+import os
+
+def compil(name, inp, out, lang, classname):
 	inputfile=open(inp,'r') 
 	tempoutfile=open("tout.txt","w")
 	temperrfile=open("terr.txt","w")
-	subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile)
+	
+	if lang=='cpp':
+		subprocess.call(["g++", name,"-o",name[:2]],stderr=temperrfile)
+		n="./"+name[:2]
+	
+	elif lang=='c':
+		subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile)
+		n="./"+name[:2]
+	
+	elif lang=='py':
+		lang='python'
+		subprocess.call(['python', name], shell=True, stdin=inputfile, stdout=tempoutfile, stderr=temperrfile)
+
+
+	elif lang=='java':
+		
+		subprocess.call(["javac", name],stderr=temperrfile)
+		cwd = os.getcwd();
+	
+	else:
+		return("Error")
+	
 	temperrfile.close()
 	temperrfile=open("terr.txt")
 	errors=temperrfile.read()
 	temperrfile.close()
-	n="./"+name[:2]
+	
 	if errors=='':
-		subprocess.call([n],stdin=inputfile,stdout=tempoutfile)
+		if(lang!='python'):
+			if(lang=='java'):
+				subprocess.call(['java', '-cp', cwd, classname], stdin=inputfile, stdout=tempoutfile)
+			else:
+				subprocess.call(n,stdin=inputfile,stdout=tempoutfile)
+		
 		inputfile.close()
 		tempoutfile.close()
 		output=compare("tout.txt",out)

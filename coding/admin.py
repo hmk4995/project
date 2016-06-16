@@ -23,7 +23,6 @@ class ContestAdmin(admin.ModelAdmin):
     list_display = ['contest_name']
     search_fields = ['contest_name']
     def save_model(self, request, obj, form, change):
-        # add=Contest.objects.get(contest_name__exact=self.contest_name)
         if change is False:
             for i in range(1,obj.no_of_candidates+1):
                 i=Candidate.objects.get_or_create(contest=obj,user_name=obj.contest_name[:3]+"{0:03}".format(i),password=obj.contest_name[:3]+"pass"+"{0:03}".format(i))

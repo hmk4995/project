@@ -36,6 +36,7 @@ def loginauth(request):
         else:
             try:
                 cand = Candidate.objects.get(user_name__exact=uname, password__exact=passwrd)
+                print(cand.contest)
             except ObjectDoesNotExist:
                 return redirect('login1')
             global authfactor
@@ -47,7 +48,6 @@ def loginauth(request):
 def contest(request,cand=None,uname=None):
     global authfactor
     if(authfactor):
-        print(authfactor)
         authfactor=False
         if cand is not None:
             setw = Contest.objects.get(contest_name__exact=cand)
@@ -66,7 +66,7 @@ def input(request):
         question_info = Question.objects.filter(question_id__exact=request.GET.get('qid'))
     except ObjectDoesNotExist:
         return redirect('login1')
-    question_detail = {'questin_name': question_info}
+    question_detail = {'question_name': question_info}
     return render(request,'coding/input', question_detail)
     
 
@@ -77,23 +77,34 @@ def upload(request):
         if form.is_valid():
             cod = form.cleaned_data["code"]
             idnum = request.POST.get('idno')
-            lang='c'
+            lang = request.POST.get('lan')
+            classname = request.POST.get('class')
+            request.session['lan'] = lang
+            request.session['id'] = idnum
+            if(lang=='python'):
+                lang = 'py'
             cntst='nss3'
             userid='nssuser1'
             cwd=os.getcwd()
             path='/home/Qbuser/Desktop/project/coding/contest/{0}/{1}/'.format(cntst,userid)
             os.makedirs(path, exist_ok=True)
             os.chdir(path)
-            name='temp{0}.{1}'.format(idnum,lang)
+            if(lang!='java'):
+                name='temp{0}.{1}'.format(idnum,lang)
+            else:
+                name=classname + '.java'
+                print(name)
             f=open(name,'w')
             f.write(cod)
             f.close()
             os.chdir(cwd)
-            t=s.test(path,name,idnum)
+            t=s.test(path, name, idnum, lang, classname)
             if(t!='err'):
+                request.session['scr'] = t
                 os.chdir(cwd)
                 return HttpResponse(t)
             else:
+                request.session['scr'] = '0'
                 f1=open("terr.txt")
                 p=f1.read()#.replace('\n', '<br>')
                 f1.close()
