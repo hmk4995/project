@@ -13,14 +13,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-
+authfactor=False
 
 def logout_view(request):
     logout(request)
     return redirect('login1')
     
 def login1(request):
-    return render_to_response('coding/login1', context=RequestContext(request))
+    return render(request,'coding/login1')
 
 def loginauth(request):
 
@@ -35,22 +35,30 @@ def loginauth(request):
                     return HttpResponseRedirect(reverse('admin:index'))
         else:
             try:
-                cand = Candidate.objects.get(user_name__exact=uname)
+                cand = Candidate.objects.get(user_name__exact=uname, password__exact=passwrd)
             except ObjectDoesNotExist:
                 return redirect('login1')
-            return listdis(request,cand)
+            global authfactor
+            authfactor=True
+            return redirect('contest',cand.contest,uname)
     else:
         return redirect('login1')
 
-def listdis(request,cand=None):
-    if cand is not None:
-        setw = Contest.objects.get(contest_name__exact=cand.contest)
+def contest(request,cand=None,uname=None):
+    global authfactor
+    if(authfactor):
+        print(authfactor)
+        authfactor=False
+        if cand is not None:
+            setw = Contest.objects.get(contest_name__exact=cand)
+        else:
+            return redirect('login1')
+        qu = setw.questions.split(',')
+        info = Question.objects.filter(question_id__in=qu)
+        detail = {'data':info}
+        return render(request,'coding/listdis',detail)
     else:
         return redirect('login1')
-    qu = setw.questions.split(',')
-    info = Question.objects.filter(question_id__in=qu)
-    detail = {'data':info}
-    return render_to_response('coding/listdis',detail,context_instance=RequestContext(request))
            
 
 def input(request):
@@ -59,7 +67,7 @@ def input(request):
     except ObjectDoesNotExist:
         return redirect('login1')
     question_detail = {'questin_name': question_info}
-    return render_to_response('coding/input', question_detail,context_instance=RequestContext(request))
+    return render(request,'coding/input', question_detail)
     
 
 def upload(request):

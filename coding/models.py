@@ -15,7 +15,7 @@ class Question(models.Model):
 		return str(self.question_id)
 
 class Contest(models.Model):
-	contest_name = models.CharField(max_length=200, default="", editable=True, unique=True)
+	contest_name = models.CharField(primary_key=True,max_length=200, default="", editable=True, unique=True)
 	college_name = models.CharField(max_length=200, default="", editable=True, unique=True)
 	no_of_candidates = models.IntegerField(default=0)
 	no_of_questions = models.IntegerField(default=0)
