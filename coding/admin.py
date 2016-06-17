@@ -7,6 +7,7 @@ from .models import Question, Contest, Candidate, Submission,Test_case
 
 class Test_caseInline(admin.TabularInline):
     model = Test_case
+    ordering = ['sl_no']
 
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [
@@ -18,6 +19,11 @@ class QuestionAdmin(admin.ModelAdmin):
     class Meta:
     	model = Question
     	ordering = ['question_id']
+    def delete_model(self,request, obj):
+        delquestion=Test_case.objects.filter(qno=obj)
+        delquestion.delete()
+        super(ContestAdmin, self).delete_model(request, obj)    
+ 
 
 class ContestAdmin(admin.ModelAdmin):
     list_display = ['contest_name']
@@ -27,7 +33,19 @@ class ContestAdmin(admin.ModelAdmin):
             for i in range(1,obj.no_of_candidates+1):
                 i=Candidate.objects.get_or_create(contest=obj,user_name=obj.contest_name[:3]+"{0:03}".format(i),password=obj.contest_name[:3]+"pass"+"{0:03}".format(i))
             super(ContestAdmin, self).save_model(request, obj, form, change)
-    #add date field
+        else:
+            print(obj.contest_name)
+            print(get_changeform_initial_data)
+            super(ContestAdmin, self).save_model(request, obj, form, change)
+            # for i in range(1,obj.no_of_candidates+1):
+            #     i=Candidate.objects.get_or_create(contest=obj,user_name=obj.contest_name[:3]+"{0:03}".format(i),password=obj.contest_name[:3]+"pass"+"{0:03}".format(i))
+
+    # def get_changeform_initial_data(self, request):
+
+    def delete_model(self,request, obj):
+        delcandidate=Candidate.objects.filter(contest=obj)
+        delcandidate.delete()
+        super(ContestAdmin, self).delete_model(request, obj)    
  
 class CandidateAdmin(admin.ModelAdmin):
     list_display = ('user_name','first_name')
