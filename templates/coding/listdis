@@ -7,15 +7,14 @@
 	<Bootstrap >
 	<link href="{%static "bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
 	<link href="{%static "css/styles.css"%}" rel="stylesheet">
-
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-	<![endif]-->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="http://malsup.github.com/jquery.form.js"></script>
+	{% if messages %}
+	<ul class="messages">
+    	{% for message in messages %}
+    	<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    	{% endfor %}
+	</ul>
+	{% endif %}
+	
 
   </head>
   <body>
@@ -36,12 +35,18 @@
 
 	<div class="page-content">
 		<div class="row">
-		  <div class="col-md-5">
+		  <div class="col-md-10">
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
-				   <div class="col-md-15">
+				<div class="col-sm-offset-10 col-sm-25">
+                <h4>Time Left</h4>
+				<div id="countdown"></div>
+                <div style="color:red;font-size:300%;" id="countdown2"></div>
+                </div>
+				   <div class="col-md-10">
+				       <h3>Questions</h3>
 				       {% for d in data %}
-                       <li><a href="/input/?qid={{ d.question_id }}" class='btn btn-primary'>{{ d.question_id }} : {{ d.question_name }}</a></li>
+                       <li><a href="/input/?qid={{ d.question_id }}" class='btn btn-primary'> {{ d.question_name }}</a></li><br>
                        {% endfor %}
 				   
                   	    
@@ -60,10 +65,46 @@
 				   
 				</ul>
 			 </div>
+			 <div class="col-sm-offset-11 col-sm-50"> 
+		    <li><a href="/logout_candidate/" type="submit" value="submit" class="btn btn-primary"> FINISH </a></li>
 		  </div>
+		  </div>
+		  
 		  
 		</div>
 	</div>
+	<script>
+ function countdown( elementName, minutes, seconds )
+{
+    var element, endTime, hours, mins, msLeft, time;
+
+    function twoDigits( n )
+    {
+        return (n <= 9 ? "0" + n : n);
+    }
+
+    function updateTimer()
+    {
+        msLeft = endTime - (+new Date);
+        if ( msLeft < 1000 ) {
+            element.innerHTML = "countdown's over!";
+        } else {
+            time = new Date( msLeft );
+            hours = time.getUTCHours();
+            mins = time.getUTCMinutes();
+            element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+            setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+        }
+    }
+
+    element = document.getElementById( elementName );
+    endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
+    updateTimer();
+}
+
+//countdown( "countdown", 1, 10 );
+countdown( "countdown2", {{request.session.get_expiry_age}} / 60, {{request.session.get_expiry_age}} % 60);
+</script>
  
   </body>
 </html>

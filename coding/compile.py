@@ -7,22 +7,33 @@ def compil(name, inp, out, lang, classname):
 	temperrfile=open("terr.txt","w")
 	
 	if lang=='cpp':
-		subprocess.call(["g++", name,"-o",name[:2]],stderr=temperrfile)
-		n="./"+name[:2]
+		try:
+			subprocess.call(["g++", name,"-o",name[:2]],stderr=temperrfile,timeout=2)
+			n="./"+name[:2]
+		except subprocess.CalledProcessError or TimeoutExpired:
+			return ("compiler_error")
 	
 	elif lang=='c':
-		subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile)
-		n="./"+name[:2]
+		try:
+			subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile,timeout=2)
+			n="./"+name[:2]
+		except subprocess.CalledProcessError or TimeoutExpired:
+			return ("compiler_error")
 	
 	elif lang=='py':
-		lang='python'
-		subprocess.call(['python', name], shell=True, stdin=inputfile, stdout=tempoutfile, stderr=temperrfile)
+		try:
+			lang='python'
+			subprocess.call(['python', name], shell=True, stdin=inputfile, stdout=tempoutfile, stderr=temperrfile,timeout=2)
+		except subprocess.CalledProcessError or TimeoutExpired:
+			return ("compiler_error")
 
 
 	elif lang=='java':
-		
-		subprocess.call(["javac", name],stderr=temperrfile)
-		cwd = os.getcwd();
+		try:
+			subprocess.call(["javac", name],stderr=temperrfile,timeout=2)
+			cwd1 = os.getcwd()
+		except subprocess.CalledProcessError or TimeoutExpired:
+			return ("compiler_error")
 	
 	else:
 		return("Error")
@@ -33,11 +44,16 @@ def compil(name, inp, out, lang, classname):
 	temperrfile.close()
 	
 	if errors=='':
-		if(lang!='python'):
-			if(lang=='java'):
-				subprocess.call(['java', '-cp', cwd, classname], stdin=inputfile, stdout=tempoutfile)
-			else:
-				subprocess.call(n,stdin=inputfile,stdout=tempoutfile)
+		if(lang=='java'):
+			try:
+				subprocess.call(['java', '-cp', cwd1, classname], stdin=inputfile, stdout=tempoutfile,timeout=2)
+			except subprocess.CalledProcessError or TimeoutExpired:
+				return ("compiler_error")
+		else:
+			try:
+				subprocess.call(n,stdin=inputfile,stdout=tempoutfile,timeout=2)
+			except subprocess.CalledProcessError or TimeoutExpired:
+				return ("compiler_error")
 		
 		inputfile.close()
 		tempoutfile.close()
@@ -47,7 +63,7 @@ def compil(name, inp, out, lang, classname):
 		else:
 			return("Failure")
 	else:
-		return ("err")
+		return ("Program_error")
 
 def compare(out,out1):
 		success=True

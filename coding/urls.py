@@ -12,6 +12,10 @@ urlpatterns = [
     url(r'^loginauth/$', views.loginauth, name='loginauth'),
     url(r'^input/$', views.input, name='input'),
     url(r'^upload$', views.upload, name='upload'),
+    url(r'^final/$', views.final, name='final'),
+    url(r'^listing/$', views.listing, name='listing'),
+    url(r'^logout_candidate/$', views.logout_candidate, name='logout_candidate'),
+    url(r'^ret/$', views.ret, name='ret')
     
     
     

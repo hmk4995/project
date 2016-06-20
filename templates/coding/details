@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+	<title>Project</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<Bootstrap >
+	<link href="{%static "bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
+	<link href="{%static "css/styles.css"%}" rel="stylesheet">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+	<![endif]-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script>$('#editor').wysiwyg();</script>
+
+  </head>
+  <body>
+	<div class="header">
+		 <div class="container">
+			<div class="row">
+			   <div class="col-md-5">
+				  <!-- Logo -->
+				  <div class="logo">
+					 <h1 style="color:red;">{{dat.contest_name}}</h1>
+				  </div>
+			   </div>
+			   
+			   
+			</div>
+		 </div>
+	</div>
+
+	<div class="page-content">
+		<div class="row">
+		  <div class="col-md-10">
+			<div class="sidebar content-box" style="display: block;">
+				<ul class="nav">
+				   <div class="col-md-15">
+				   
+ 				     <h2>WELCOME</h2>
+            <p>Fill up your Details</p>
+							   
+						<div class="content-box-large">
+						
+							<div class="panel-body">
+								<form class="form-horizontal" role="form"  action="/listing/"   method="POST"  enctype="multipart/form-data">{% csrf_token %}
+						
+										<br>First Name: <input type="text" name="firstname"><br><br>
+										Last Name: <input type="text" name="lastname"><br>
+                                        <button type="submit" value="submit" class="btn btn-primary"> CONTINUE </button>
+
+								  
+								 
+								 
+								</form>
+								</div>
+								
+                   
+									
+							</div>
+							
+									
+						</div>
+					</ul>	
+		  </div>
+		  
+		</div>
+	</div>
+  <script type="text/javascript">
+
+   $(document).ready(function(event) {
+        //$("#error").ajaxForm(function(){ #}
+       	 //{#event.preventDefault();#}
+           
+       	 var code = $("#ans").val();
+       	 
+          //{#   $.ajax({  #}
+           //{#       type:"POST",#}
+           //{#       url:"/upload/",#}
+            //{#       data: {  #}
+            //{#       	code : $("#ans").val(),#}
+       	 
+              //{#    	'csrfmiddlewaretoken': '{{csrf_token}}' #}
+            //{#       }  #}
+                  
+            //{# });  #}
+
+        var options = { 
+            
+	        beforeSubmit:  showRequest,  // pre-submit callback 
+	        success:       showResponse  // post-submit callback 
+            
+        }; 
+ 
+	     
+	    $('#error').ajaxForm(options); 
+	   
+    });
+function showRequest(formData, jqForm, options) { 
+	alert('About to submit: \n\n' ); 
+	    return true; 
+} 
+
+function showResponse(responseText) { 
+	alert('About to submit: \n\n');
+	$("#errmsg").html(responseText);
+	    return true; 
+} 
+</script>
+	
+  </body>
+</html>

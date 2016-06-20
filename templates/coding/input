@@ -16,7 +16,13 @@
 	<![endif]-->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="http://malsup.github.com/jquery.form.js"></script>
-    <script>$('#editor').wysiwyg();</script>
+    {% if messages %}
+	<ul class="messages">
+    	{% for message in messages %}
+    	<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    	{% endfor %}
+	</ul>
+	{% endif %}
 
   </head>
   <body>
@@ -29,8 +35,7 @@
 					 <h1><a href="#">Question</a></h1>
 				  </div>
 			   </div>
-			   
-			   
+			    
 			</div>
 		 </div>
 	</div>
@@ -40,14 +45,22 @@
 		  <div class="col-md-10">
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
+					<div class="col-sm-offset-11 col-sm-40">
+                	<h4>Time Left</h4>
+					<div id="countdown"></div>
+                	<div style="color:red;font-size:300%;" id="countdown2"></div>
+                	</div>
 				   <div class="col-md-15">
-				   
+				   <div class="col-sm-offset-11 col-sm-50">
+                                <li><a href="/ret/" type="button"  class="btn btn-primary">RETURN</a></li>
+                                </div>
+				    <div id="status"></div>
  				     <h4>{{question_name.first.question_name}}</h4>
 					<p style="font-family:verdana,font-size:160%;">{{question_name.first.description}}<br><br>Input Format:{{question_name.first.input_format}}<br>Output Format:{{question_name.first.output_format}}<br>{{question_name.first.sample}}</p>
 
 							   
 						<div class="content-box-large">
-						
+						 
 							<div class="panel-body">
 								<form class="form-horizontal" role="form"  action="{% url 'upload' %}" id="error"  method="POST"  enctype="multipart/form-data">{% csrf_token %}
 									
@@ -56,7 +69,6 @@
 											  <option value="cpp">C++</option>
 											  <option value="c">C</option>
 											  <option value="java">Java</option>
-											  <option value="python">Python</option>
 											</select>
 
 									
@@ -93,7 +105,7 @@
 									  <textarea class="form-control" name="errormsg"  id="errmsg" rows="10" cols="60" placeholder="Errors......" ></textarea>
 							</div>
                           <div class="col-sm-offset-11 col-sm-50">
-                                <li><a href="/final/?scr={{errmsg}}" type="button"  class="btn btn-primary">SUBMIT</a></li>
+                                <li><a href="/final/" type="button"  class="btn btn-primary">SUBMIT</a></li>
                                 </div>
                               
 					 
@@ -112,17 +124,6 @@
        	 //{#event.preventDefault();#}
            
        	 var code = $("#ans").val();
-       	 
-          //{#   $.ajax({  #}
-           //{#       type:"POST",#}
-           //{#       url:"/upload/",#}
-            //{#       data: {  #}
-            //{#       	code : $("#ans").val(),#}
-       	 
-              //{#    	'csrfmiddlewaretoken': '{{csrf_token}}' #}
-            //{#       }  #}
-                  
-            //{# });  #}
 
         var options = { 
             
@@ -146,6 +147,37 @@ function showResponse(responseText) {
 	    return true; 
 } 
 </script>
-	
+<script>
+ function countdown( elementName, minutes, seconds )
+{
+    var element, endTime, hours, mins, msLeft, time;
+
+    function twoDigits( n )
+    {
+        return (n <= 9 ? "0" + n : n);
+    }
+
+    function updateTimer()
+    {
+        msLeft = endTime - (+new Date);
+        if ( msLeft < 1000 ) {
+            element.innerHTML = "countdown's over!";
+        } else {
+            time = new Date( msLeft );
+            hours = time.getUTCHours();
+            mins = time.getUTCMinutes();
+            element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+            setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+        }
+    }
+
+    element = document.getElementById( elementName );
+    endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
+    updateTimer();
+}
+
+//countdown( "countdown", 1, 10 );
+countdown( "countdown2", {{request.session.get_expiry_age}} / 60, {{request.session.get_expiry_age}} % 60);
+</script>
   </body>
 </html>

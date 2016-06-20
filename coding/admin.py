@@ -7,7 +7,19 @@ from .models import Question, Contest, Candidate, Submission,Test_case
 
 class Test_caseInline(admin.TabularInline):
     model = Test_case
+    extra=0
     ordering = ['sl_no']
+
+class SubmissionInline(admin.TabularInline):
+    model = Submission
+    extra=0
+    readonly_fields = ('question_no','language', 'time','score')
+    fields = ('question_no', 'language', 'time','score')
+    ordering = ['question_no']
+    def has_add_permission(self, request):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
 
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [
@@ -35,7 +47,7 @@ class ContestAdmin(admin.ModelAdmin):
             super(ContestAdmin, self).save_model(request, obj, form, change)
         else:
             print(obj.contest_name)
-            print(get_changeform_initial_data)
+            # print(get_changeform_initial_data)
             super(ContestAdmin, self).save_model(request, obj, form, change)
             # for i in range(1,obj.no_of_candidates+1):
             #     i=Candidate.objects.get_or_create(contest=obj,user_name=obj.contest_name[:3]+"{0:03}".format(i),password=obj.contest_name[:3]+"pass"+"{0:03}".format(i))
@@ -49,9 +61,19 @@ class ContestAdmin(admin.ModelAdmin):
  
 class CandidateAdmin(admin.ModelAdmin):
     list_display = ('user_name','first_name')
+    readonly_fields = ('scores',)
+    inlines = [
+        SubmissionInline,
+    ]
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('language','time','score')
+    list_display = ('question_no','language','time','score')
+    def has_add_permission(self, request):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def has_module_permission(self, request, obj=None):
+        return True
 
 
 class Test_caseAdmin(admin.ModelAdmin):

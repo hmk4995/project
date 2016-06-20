@@ -1,5 +1,7 @@
 from django.db import models
-
+from django.forms import ModelForm
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 class Question(models.Model):
 	question_id= models.AutoField(primary_key=True)
@@ -16,10 +18,11 @@ class Question(models.Model):
 
 class Contest(models.Model):
 	contest_name = models.CharField(primary_key=True,max_length=200, default="", editable=True, unique=True)
-	college_name = models.CharField(max_length=200, default="", editable=True, unique=True)
+	college_name = models.CharField(max_length=200, default="", editable=True)
 	no_of_candidates = models.IntegerField(default=0)
-	no_of_questions = models.IntegerField(default=0)
-	time = models.IntegerField(default=0)
+	start_date = models.DateTimeField(default=datetime.now(timezone.utc),blank=False)
+	end_date = models.DateTimeField(default=datetime.now(timezone.utc),blank=False)
+	time = models.DurationField(default=timedelta())
 	questions = models.CommaSeparatedIntegerField(max_length=200, default=0, editable=True)
 
 	def __str__(self):
@@ -47,16 +50,18 @@ class Candidate(models.Model):
 	password = models.CharField(max_length=200, default="password", editable=False)
 	first_name = models.CharField(max_length=200, default="",blank=True, editable=True)
 	last_name = models.CharField(max_length=200, default="",blank=True, editable=True)
+	scores = models.IntegerField(default=0, editable=False)
 
 	def __str__(self):
 		return self.user_name
 
 class Submission(models.Model):
+	sl_no = models.AutoField(primary_key=True)
 	candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-	question = models.ForeignKey(Question,default="", on_delete=models.CASCADE)
+	question_no = models.IntegerField(default=0, editable=False)
 	language = models.CharField(max_length=200, default="", editable=True)
 	time = models.IntegerField(default=0)
-	score = models.IntegerField(default=0)
+	score = models.IntegerField(default=0, editable=False)
 
 	def __int__(self):
 		return self.score
