@@ -18,8 +18,8 @@ class SubmissionInline(admin.TabularInline):
     ordering = ['question_no']
     def has_add_permission(self, request):
         return False
-    def has_change_permission(self, request, obj=None):
-        return False
+    # def has_change_permission(self, request, obj=None):
+    #     return False
 
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [
@@ -43,7 +43,7 @@ class ContestAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if change is False:
             for i in range(1,obj.no_of_candidates+1):
-                i=Candidate.objects.get_or_create(contest=obj,user_name=obj.contest_name[:3]+"{0:03}".format(i),password=obj.contest_name[:3]+"pass"+"{0:03}".format(i))
+                i=Candidate.objects.get_or_create(contest=obj,user_name=obj.contest_name[:3]+"{0:03}".format(i),password=obj.contest_name[:3]+"pass"+"{0:03}".format(i),remtime=obj.time)
             super(ContestAdmin, self).save_model(request, obj, form, change)
         else:
             print(obj.contest_name)
@@ -69,8 +69,6 @@ class CandidateAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('question_no','language','time','score')
     def has_add_permission(self, request):
-        return False
-    def has_change_permission(self, request, obj=None):
         return False
     def has_module_permission(self, request, obj=None):
         return True

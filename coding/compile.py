@@ -8,31 +8,27 @@ def compil(name, inp, out, lang, classname):
 	
 	if lang=='cpp':
 		try:
-			subprocess.call(["g++", name,"-o",name[:2]],stderr=temperrfile,timeout=2)
+			subprocess.call(["g++", name,"-o",name[:2]],stderr=temperrfile,timeout=1)
 			n="./"+name[:2]
-		except subprocess.CalledProcessError or TimeoutExpired:
+		except subprocess.CalledProcessError:
 			return ("compiler_error")
+		except subprocess.TimeoutExpired:
+			return ("Timeout Error")
 	
 	elif lang=='c':
 		try:
-			subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile,timeout=2)
+			subprocess.call(["gcc", name,"-o",name[:2]],stderr=temperrfile,timeout=1)
 			n="./"+name[:2]
-		except subprocess.CalledProcessError or TimeoutExpired:
+		except subprocess.CalledProcessError:
 			return ("compiler_error")
+		except subprocess.TimeoutExpired:
+			return ("Timeout Error")
 	
-	elif lang=='py':
-		try:
-			lang='python'
-			subprocess.call(['python', name], shell=True, stdin=inputfile, stdout=tempoutfile, stderr=temperrfile,timeout=2)
-		except subprocess.CalledProcessError or TimeoutExpired:
-			return ("compiler_error")
-
-
 	elif lang=='java':
 		try:
-			subprocess.call(["javac", name],stderr=temperrfile,timeout=2)
+			subprocess.call(["javac", name],stderr=temperrfile,timeout=1)
 			cwd1 = os.getcwd()
-		except subprocess.CalledProcessError or TimeoutExpired:
+		except:
 			return ("compiler_error")
 	
 	else:
@@ -46,14 +42,16 @@ def compil(name, inp, out, lang, classname):
 	if errors=='':
 		if(lang=='java'):
 			try:
-				subprocess.call(['java', '-cp', cwd1, classname], stdin=inputfile, stdout=tempoutfile,timeout=2)
-			except subprocess.CalledProcessError or TimeoutExpired:
+				subprocess.call(['java', '-cp', cwd1, classname], stdin=inputfile, stdout=tempoutfile,timeout=1)
+			except:
 				return ("compiler_error")
 		else:
 			try:
-				subprocess.call(n,stdin=inputfile,stdout=tempoutfile,timeout=2)
-			except subprocess.CalledProcessError or TimeoutExpired:
+				subprocess.call(n,stdin=inputfile,stdout=tempoutfile,timeout=1)
+			except subprocess.CalledProcessError:
 				return ("compiler_error")
+			except subprocess.TimeoutExpired:
+				return ("Timeout_error")
 		
 		inputfile.close()
 		tempoutfile.close()

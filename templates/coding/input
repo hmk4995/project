@@ -6,16 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<Bootstrap >
 	<link href="{%static "bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
-	<link href="{%static "css/styles.css"%}" rel="stylesheet">
-
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-	<![endif]-->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="http://malsup.github.com/jquery.form.js"></script>
+	<link href="{%static "css/styles.css"%}" rel="stylesheet">	
+	<script src="{%static "js/jquery.js"%}"></script> 
+    <script src="{%static "js/jquery.form.js"%}"></script>
     {% if messages %}
 	<ul class="messages">
     	{% for message in messages %}
@@ -23,94 +16,93 @@
     	{% endfor %}
 	</ul>
 	{% endif %}
-
   </head>
-  <body>
+  <body background="{%static "images/bg.jpg"%}" bgproperties="absolute">
 	<div class="header">
-		 <div class="container">
-			<div class="row">
-			   <div class="col-md-5">
-				  <!-- Logo -->
-				  <div class="logo">
-					 <h1><a href="#">Question</a></h1>
-				  </div>
-			   </div>
-			    
-			</div>
-		 </div>
+		 
+		<h1 style="color:white;font-size:300%;font-family:verdana;">Question</h1>
+				
 	</div>
-
 	<div class="page-content">
 		<div class="row">
 		  <div class="col-md-10">
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
-					<div class="col-sm-offset-11 col-sm-40">
-                	<h4>Time Left</h4>
-					<div id="countdown"></div>
-                	<div style="color:red;font-size:300%;" id="countdown2"></div>
-                	</div>
-				   <div class="col-md-15">
 				   <div class="col-sm-offset-11 col-sm-50">
-                                <li><a href="/ret/" type="button"  class="btn btn-primary">RETURN</a></li>
-                                </div>
-				    <div id="status"></div>
- 				     <h4>{{question_name.first.question_name}}</h4>
-					<p style="font-family:verdana,font-size:160%;">{{question_name.first.description}}<br><br>Input Format:{{question_name.first.input_format}}<br>Output Format:{{question_name.first.output_format}}<br>{{question_name.first.sample}}</p>
-
-							   
-						<div class="content-box-large">
+                                <li><a href="/ret/" type="button"  class="btn btn-primary">RETURN</a></li><br>
+                   </div>
+                   <div class="col-xs-6">        	
+				      <div class="col-md-15">
+				   
+				    
+		 				     <h3 style="color:black;font-size:250%;font-family:verdana;"><u>{{question_name.first.question_name}}</u></h3><br><br>
+							<p style="font-family:verdana;font-size:160%;">{{question_name.first.description}}<br>Input Format:{{question_name.first.input_format}}<br>Output Format:{{question_name.first.output_format}}<br>{{question_name.first.sample}}</p>
+						</div>	
+					</div>  
+                   <div class="col-xs-6 ">
+								<div class=" col-sm-offset-1 col-sm-25">
+			                	<h4>Time Left</h4>
+								<div id="countdown"></div>
+			                	<div style="color:red;font-size:300%;" id="countdown2"></div>
+			                	</div>
+			        </div>
+			         
+					<div class="content-box-large">
 						 
-							<div class="panel-body">
-								<form class="form-horizontal" role="form"  action="{% url 'upload' %}" id="error"  method="POST"  enctype="multipart/form-data">{% csrf_token %}
+						<div class="panel-body">
+							<form class="form-horizontal" role="form"  action="{% url 'upload' %}" id="error"  method="POST"  enctype="multipart/form-data">{% csrf_token %}
 									
-								  <div class="form-group"> 
-								  <select name="lan">
+								 <div class="form-group"> 
+								 <h5>Select Language</h5>
+								    <select name="lan">
 											  <option value="cpp">C++</option>
 											  <option value="c">C</option>
 											  <option value="java">Java</option>
-											</select>
+									</select>
 
 									
-												<br><br><br>Main class name: <input type="text" name="class"><br>
+										<br><br><br><p style="font-size: 120%;">Main class name: <input type="text" name="class"></p><br>
 									
 
-											<p><b>Note:</b>Main class name is applicable to Java programs only.</p>
+										<p style="font-size: 120%;"><b>Note:</b>Main class name is applicable to Java programs only.</p>
+                                    <label for="inputquestion" class="col-sm-12 control-label">Code</label>
+										<div class="col-sm-15">
+										  <textarea class="form-control" name="code"  id="ans" rows="10" cols="60" placeholder="Enter the code..." ></textarea>
+										</div>
 
-									<label for="inputquestion" class="col-sm-12 control-label">Code</label>
-									<div class="col-sm-15">
-									  <textarea class="form-control" name="code"  id="ans" rows="10" cols="60" placeholder="Enter the code..." ></textarea>
-									</div>
-
-								  </div>
+								 </div>
 								 
 								  <div class="form-group">
 									<div  class="col-sm-offset-11 col-sm-50">
 									  <input type="hidden" name="idno" value="{{ question_name.first.question_id }}"/>
-									  <button type="submit" value="submit" class="btn btn-primary"> Run </button>
+									  <button id = "run" type="submit" value="submit" class="btn btn-primary"> Run </button>
 									</div>
 								  </div>
 								 
 								 
-								</form>
-								
-
-									
-							</div>
-							
-									
+							</form>
 						</div>
-						<div><h3>RESULT</h3></div>
+					</div>
+					<script>
+								$(document).ready(function(){
+    								$(run).click(function(){
+        							$(showresult).show();
+    								});
+									});
+					</script>
+					<div id="showresult"  style="display:none;">
+					<div><h3>RESULT</h3></div>
                           <div class="col-sm-15">
-									  <textarea class="form-control" name="errormsg"  id="errmsg" rows="10" cols="60" placeholder="Errors......" ></textarea>
+									  <textarea class="form-control" name="errormsg"  id="errmsg" rows="10" cols="60"  ></textarea>
 							</div>
                           <div class="col-sm-offset-11 col-sm-50">
                                 <li><a href="/final/" type="button"  class="btn btn-primary">SUBMIT</a></li>
                                 </div>
+                     </div>
                               
 					 
 					
-				   
+				  
 				</ul>
 			 </div>
 		  </div>
@@ -120,15 +112,13 @@
   <script type="text/javascript">
 
    $(document).ready(function(event) {
-        //$("#error").ajaxForm(function(){ #}
-       	 //{#event.preventDefault();#}
-           
+        
        	 var code = $("#ans").val();
 
         var options = { 
             
-	        beforeSubmit:  showRequest,  // pre-submit callback 
-	        success:       showResponse  // post-submit callback 
+	        beforeSubmit:  showRequest,  
+	        success:       showResponse  
             
         }; 
  
@@ -142,7 +132,7 @@ function showRequest(formData, jqForm, options) {
 } 
 
 function showResponse(responseText) { 
-	alert('About to submit: \n\n');
+	alert('Submitted \n\n');
 	$("#errmsg").html(responseText);
 	    return true; 
 } 
@@ -161,8 +151,10 @@ function showResponse(responseText) {
     {
         msLeft = endTime - (+new Date);
         if ( msLeft < 1000 ) {
-            element.innerHTML = "countdown's over!";
-        } else {
+        	element.innerHTML = "TIME'S UP!!!";
+        	document.location.href = "/logout_candidate/?candid={{cand}}&completed=complete";            
+        }
+        else {
             time = new Date( msLeft );
             hours = time.getUTCHours();
             mins = time.getUTCMinutes();
@@ -175,9 +167,7 @@ function showResponse(responseText) {
     endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
     updateTimer();
 }
-
-//countdown( "countdown", 1, 10 );
-countdown( "countdown2", {{request.session.get_expiry_age}} / 60, {{request.session.get_expiry_age}} % 60);
+countdown( "countdown2", {{request.session.get_expiry_age}} / 60, 0);
 </script>
   </body>
 </html>

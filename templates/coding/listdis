@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+
 <html>
   <head>
 	<title>Project</title>
@@ -7,7 +8,9 @@
 	<Bootstrap >
 	<link href="{%static "bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
 	<link href="{%static "css/styles.css"%}" rel="stylesheet">
-	{% if messages %}
+	<script src="{%static "js/jquery.js"%}"></script> 
+    <script src="{%static "js/jquery.form.js"%}"></script>
+    {% if messages %}
 	<ul class="messages">
     	{% for message in messages %}
     	<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
@@ -17,14 +20,14 @@
 	
 
   </head>
-  <body>
+  <body background="{%static "images/bg.jpg"%}" bgproperties="fixed">
 	<div class="header">
 		 <div class="container">
 			<div class="row">
 			   <div class="col-md-5">
 				  <!-- Logo -->
 				  <div class="logo">
-					 <h1><a href="#">CONTEST</a></h1>
+					 <h1 style="color:white;font-size:300%;font-family:verdana;"><a href="#">CONTEST</a></h1>
 				  </div>
 			   </div>
 			   
@@ -35,18 +38,13 @@
 
 	<div class="page-content">
 		<div class="row">
-		  <div class="col-md-10">
+		  <div class="col-md-7">
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
-				<div class="col-sm-offset-10 col-sm-25">
-                <h4>Time Left</h4>
-				<div id="countdown"></div>
-                <div style="color:red;font-size:300%;" id="countdown2"></div>
-                </div>
-				   <div class="col-md-10">
+				<div class= "col-xs-6">
 				       <h3>Questions</h3>
 				       {% for d in data %}
-                       <li><a href="/input/?qid={{ d.question_id }}" class='btn btn-primary'> {{ d.question_name }}</a></li><br>
+                       <li><a href="/input/?qid={{ d.question_id }}" class='btn btn-primary' style="height:50px;width:100px"> {{ d.question_name }}</a></li><br>
                        {% endfor %}
 				   
                   	    
@@ -55,19 +53,20 @@
 				        
 				        {#{% endfor %}#}
 				    </div>
- 				     
-							   
-						
-						
-                        
-					 
+				<div class="col-xs-6">
+				<div class=" col-sm-offset-7 col-sm-25">
+                <h4>Time Left</h4>
+				<div class="col-md-10" id="countdown"></div>
+                <div style="color:red;font-size:300%;" id="countdown2"></div>
+                </div>
+                </div>
+			    </ul>
+				<div class="col-sm-offset-10 col-sm-50"> 
+		    <li><a href="/logout_candidate/?candid={{cand}}&completed=incomplete" type="submit" value="submit" class="btn btn-primary"> FINISH </a></li>
+		  </div>	   
 					
-				   
-				</ul>
 			 </div>
-			 <div class="col-sm-offset-11 col-sm-50"> 
-		    <li><a href="/logout_candidate/" type="submit" value="submit" class="btn btn-primary"> FINISH </a></li>
-		  </div>
+			 
 		  </div>
 		  
 		  
@@ -86,8 +85,9 @@
     function updateTimer()
     {
         msLeft = endTime - (+new Date);
-        if ( msLeft < 1000 ) {
-            element.innerHTML = "countdown's over!";
+        if ( msLeft < 2000 ) {
+        	element.innerHTML = "countdown's over!";
+        	document.location.href = "/logout_candidate/?candid={{cand}}&completed=complete";
         } else {
             time = new Date( msLeft );
             hours = time.getUTCHours();
@@ -103,8 +103,7 @@
 }
 
 //countdown( "countdown", 1, 10 );
-countdown( "countdown2", {{request.session.get_expiry_age}} / 60, {{request.session.get_expiry_age}} % 60);
+countdown( "countdown2", {{request.session.get_expiry_age}} / 60, 0);
 </script>
- 
   </body>
 </html>

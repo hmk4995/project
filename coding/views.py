@@ -1,7 +1,8 @@
 from . import test as s
-import os
+import os, shutil
+# from coding.templatetags import custom_tags
 from django.shortcuts import render
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
@@ -18,6 +19,7 @@ from django.contrib import messages
 # from django.utils.timezone import utc
 # timezone.make_aware(dt_unaware, timezone.get_current_timezone())
 
+ 
 
 def logout_view(request):
     logout(request)
@@ -30,8 +32,8 @@ def login1(request):
 def loginauth(request):
 
     if request.method == 'POST':
-        if request.session.test_cookie_worked():
-            request.session.delete_test_cookie()
+        # if request.session.test_cookie_worked():
+        #     request.session.delete_test_cookie()
             uname = request.POST.get('name')
             passwrd = request.POST.get('pword')
             user = authenticate(username = uname, password = passwrd)
@@ -43,6 +45,9 @@ def loginauth(request):
             else:
                 try:
                     cand = Candidate.objects.get(user_name__exact=uname, password__exact=passwrd)
+                    if(cand.finished):
+                        messages.error(request, "Your Time is UP!!! {0} has Finished !!".format(cand.contest))
+                        return redirect('login1')
                     try:
                         session_name=request.session['namee']
                         session_contest=request.session['contest']
@@ -54,12 +59,16 @@ def loginauth(request):
                             request.session.flush()
                             print("flush success")
                         else:
+                            request.session.set_expiry(cand.remtime)
                             print("redirect success")
                             return redirect('contest',request.session['contest'],request.session['namee'])   
                     except KeyError:
                         print('err')
                     request.session['namee'] = cand.user_name
                     request.session['contest'] = cand.contest
+                    if cand.first_name and cand.last_name is not None:
+                        request.session.set_expiry(cand.remtime)
+                        return redirect('contest',request.session['contest'],request.session['namee'])
                     print(request.session['contest'])
                     print(request.session.keys())
                     print('login')
@@ -78,9 +87,9 @@ def loginauth(request):
                     messages.error(request, "{0} has Finished !!".format(setw.contest_name))
                     return redirect('login1')
 
-        else:
-            messages.error(request, "Please enable cookies and try again.")
-            return redirect('login1')
+        # else:
+        #     messages.error(request, "Please enable cookies and try again.")
+        #     return redirect('login1')
     else:
         return redirect('login1')
 
@@ -100,7 +109,7 @@ def contest(request,cand=None,uname=None):
             return redirect('login1')
         qu = setw.questions.split(',')
         info = Question.objects.filter(question_id__in=qu)
-        detail = {'data':info}
+        detail = {'data':info, 'cand': request.session['namee']}
         return render(request,'coding/listdis',detail)
     else:
         print("hi")
@@ -119,7 +128,7 @@ def listing(request):
         t.save()  
         print(fname)
         setw = Contest.objects.get(contest_name__exact=request.session['contest'])
-        request.session.set_expiry(setw.time)
+        request.session.set_expiry(t.remtime)
         print (request.session['contest'])
         print(request.session['namee'])
         print(request.session.keys())
@@ -138,7 +147,7 @@ def input(request):
         question_info = Question.objects.filter(question_id__exact=request.GET.get('qid'))
     except ObjectDoesNotExist:
         return redirect('login1')
-    question_detail = {'question_name': question_info}
+    question_detail = {'question_name': question_info, 'cand': request.session['namee']}
     print(request.session.keys())
     print('input')
     print(request.session.get_expiry_age())
@@ -185,7 +194,10 @@ def upload(request):
                 return HttpResponse("ERRORS\n"+p)
             elif(t=='compiler_error'):
                 os.chdir(cwd)
-                return HttpResponse(t)                
+                return HttpResponse(t) 
+            elif(t=='Timeout Error'):
+                os.chdir(cwd)
+                return HttpResponse(t)               
             else:
                 request.session['scr'] = t
                 os.chdir(cwd)
@@ -210,23 +222,35 @@ def final(request):
             lang = request.session['lan']
             name = request.session['namee']
         except KeyError:
+            print(" final key error")
             return redirect('contest',request.session['contest'],request.session['namee'])  #do something here to prevent simple submit
         del request.session['scr']
+        del request.session['id']
+        del request.session['lan']
         idno = int(idnum)
         qstnscore=Question.objects.get(question_id__exact=idno)
-        scr = int(score*qstnscore.score)
+        scr = int(score*qstnscore.score)/100
         # print(type(scr))
         e = Candidate.objects.get(user_name__exact=name)
+        submittime=Contest.objects.get(contest_name__exact=request.session['contest'])
         try:
             submit=Submission.objects.get(candidate__exact=e,question_no__exact=idno)
             if submit.score<score:
+                print("submit score")
                 submit.score=score
-                submit.language=language
+                submit.language=lang
+                submit.time=submittime.time-timedelta(seconds=request.session.get_expiry_age())
+                print(submit.time)
                 submit.save()
             else:
+                print("submit less error")
                 pass
         except ObjectDoesNotExist:
-            submit=Submission.objects.create(candidate=e,question_no=idno, language=lang, score=scr)
+            print("time diff")
+            print(submittime.time)
+            print(timedelta(request.session.get_expiry_age()))
+            print(submittime.time-timedelta(request.session.get_expiry_age()))
+            submit=Submission.objects.create(candidate=e,question_no=idno, language=lang, score=scr, time=submittime.time-timedelta(seconds=request.session.get_expiry_age()))
         return redirect('contest',request.session['contest'],request.session['namee'])
     else:
         messages.error(request, "Your Time is UP!!!. {0} has Finished !!".format(request.session['contest']))
@@ -238,16 +262,36 @@ def ret(request):
 
 def logout_candidate(request):
     score=0
+    candid=request.GET.get('candid')
+    completed=request.GET.get('completed')
+    print(completed)
+    print('zero')
+    # print(completed)
+    # request.session.set_expiry(0)
+    print(request.session.get_expiry_age())
+    print(candid)
     try:
-        e = Candidate.objects.get(user_name__exact=request.session['namee'])
-        for i in Submission.objects.get(candidate__exact=e):
+        e = Candidate.objects.get(user_name__exact=candid)
+        print(e)
+        for i in Submission.objects.filter(candidate__exact=e):
+            print(i)
             score+=i.score
         e.scores=score
         e.save()
+        print('saved')
     except:
         print("errortry")
-    if request.session.get_expiry_age()==0:
-        print("timeout")
+    if completed!='complete': 
+        e.remtime=timedelta(seconds=request.session.get_expiry_age())
+        print('timeout')
+    else:
+        print("not timeout")
+        e.finished=True
+        e.remtime=timedelta(seconds=0)
         request.session.flush()
+    e.save()
+    directory='coding/contest/{0}/{1}/'.format(str(e.contest),e.user_name)
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
     messages.success(request, "Thank you for taking the test")
     return redirect('login1')

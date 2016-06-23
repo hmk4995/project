@@ -14,6 +14,8 @@ def test(path1, name, no, lang, classname):
 			return 'Program_error'
 		elif(compiledResult =='compiler_error'):
 			return 'compiler_error'
+		elif(compiledResult =='Timeout_error'):
+			return 'Timeout Error'
 		elif(compiledResult =='Success'):
 		   cnt+=1
 	return((cnt/cont)*100)

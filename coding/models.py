@@ -51,6 +51,8 @@ class Candidate(models.Model):
 	first_name = models.CharField(max_length=200, default="",blank=True, editable=True)
 	last_name = models.CharField(max_length=200, default="",blank=True, editable=True)
 	scores = models.IntegerField(default=0, editable=False)
+	remtime= models.DurationField(default=timedelta())
+	finished=models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.user_name
@@ -60,7 +62,7 @@ class Submission(models.Model):
 	candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
 	question_no = models.IntegerField(default=0, editable=False)
 	language = models.CharField(max_length=200, default="", editable=True)
-	time = models.IntegerField(default=0)
+	time = models.DurationField(default=timedelta())
 	score = models.IntegerField(default=0, editable=False)
 
 	def __int__(self):

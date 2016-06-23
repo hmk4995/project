@@ -75,7 +75,8 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'project.urls'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_COOKIE_AGE = 60
 
 TEMPLATES = [
     {
