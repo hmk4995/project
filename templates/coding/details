@@ -2,7 +2,7 @@
 {% load staticfiles %}
 <html>
   <head>
-	<title>Project</title>
+	<title>ONCAPP</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<Bootstrap >
 	<link href="{%static "bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
@@ -20,7 +20,7 @@
 
 	<div class="page-content">
 		<div class="row">
-		  <div class="col-xs-6">
+		  <div class="col-xs-6 col-sm-offset-3">
 			<div class="sidebar content-box" style="display: block;">
 				<ul class="nav">
 				   <div class="col-md-15">
