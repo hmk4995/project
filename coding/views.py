@@ -2,7 +2,7 @@ from . import test as s
 import os, shutil
 # from coding.templatetags import custom_tags
 from django.shortcuts import render
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
@@ -107,8 +107,9 @@ def contest(request,cand=None,uname=None):
         except KeyError:
             print("hi again")
             return redirect('login1')
-        qu = setw.questions.split(',')
-        info = Question.objects.filter(question_id__in=qu)
+        
+        info = setw.questions.all()
+        print(info)
         detail = {'data':info, 'cand': request.session['namee']}
         return render(request,'coding/listdis',detail)
     else:
@@ -177,6 +178,8 @@ def upload(request):
             os.makedirs(path, exist_ok=True)
             os.chdir(path)
             if(lang!='java'):
+                if(lang=='python'):
+                    lang='py'
                 name='temp{0}.{1}'.format(idnum,lang)
             else:
                 name=classname + '.java'
@@ -193,9 +196,11 @@ def upload(request):
                 os.chdir(cwd)
                 return HttpResponse("ERRORS\n"+p)
             elif(t=='compiler_error'):
+                request.session['scr'] = '0'
                 os.chdir(cwd)
                 return HttpResponse(t) 
             elif(t=='Timeout Error'):
+                request.session['scr'] = '0'
                 os.chdir(cwd)
                 return HttpResponse(t)               
             else:
@@ -235,9 +240,9 @@ def final(request):
         submittime=Contest.objects.get(contest_name__exact=request.session['contest'])
         try:
             submit=Submission.objects.get(candidate__exact=e,question_no__exact=idno)
-            if submit.score<score:
+            if submit.score<scr:
                 print("submit score")
-                submit.score=score
+                submit.score=scr
                 submit.language=lang
                 submit.time=submittime.time-timedelta(seconds=request.session.get_expiry_age())
                 print(submit.time)
